@@ -15,7 +15,7 @@ if __name__ == '__main__':
     # problem = problem_reader.read_problem("test250.csv")  # 101252.89 (iteration 365, 27.91 seconds)
     # problem = problem_reader.read_problem("test500.csv")  # 199058.75 (iteration 2119, 249.21 seconds)
     # problem = problem_reader.read_problem("test750.csv")  # 288670.13 (iteration 3544, 934.85 seconds)
-    problem = problem_reader.read_problem("test1000.csv")  # circa 20k iterations, around 1hr runtime on good pc
+    problem = problem_reader.read_problem("test1000.csv")  # 400755.57 (iteration 7881, 2130.92 seconds)
 
     problem_solver = ProblemSolver()
     print(problem_solver.solve(problem, Methods.revised_simplex))
