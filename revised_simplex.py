@@ -22,6 +22,9 @@ class RevisedSimplex(object):
         return self.__iteration(xi_b, xi_n, x_b, A, c, print_steps)
 
     def __iteration(self, xi_b, xi_n, x_b, A, c, print_steps: bool = False) -> ProblemSolution:
+        # todo expand for boundaries
+        # add x_n
+
         iteration = 0
         ins = np.full_like(len(xi_n), 1)
         while np.max(ins) > 0:
