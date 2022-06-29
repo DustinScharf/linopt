@@ -19,15 +19,25 @@ class RevisedSimplex(object):
         c_n = problem.c
         c = np.concatenate((c_n, c_b))
 
-        return self.__iteration(xi_b, xi_n, x_b, A, c, print_steps)
+        x_n = np.zeros_like(c_n)
 
-    def __iteration(self, xi_b, xi_n, x_b, A, c, print_steps: bool = False) -> ProblemSolution:
+        l = np.zeros_like(c_n)
+        u = np.array([8, 6, 4, 15, 2, 10, 10, 3])
+
+        return self.__iteration(xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps)
+
+    def __all_at_upper_bound(self, ins, u) -> bool:
+        for in_var, upper_bound in zip(ins, u):
+            if not np.isclose(in_var, upper_bound):
+                return False
+        return True
+
+    def __iteration(self, xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps: bool = False) -> ProblemSolution:
         # todo expand for boundaries
-        # add x_n
 
         iteration = 0
         ins = np.full_like(len(xi_n), 1)
-        while np.max(ins) > 0:
+        while np.max(ins) > 0 and not self.__all_at_upper_bound(ins, u):
             print("iteration", iteration)
             iteration += 1
 
