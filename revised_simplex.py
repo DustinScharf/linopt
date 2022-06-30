@@ -36,7 +36,7 @@ class RevisedSimplex(object):
         # todo expand for boundaries
 
         iteration = 0
-        ins = np.full_like(len(xi_n), 1)
+        ins = np.full_like(xi_n, 1)
         while np.max(ins) > 0 and not self.__all_at_upper_bound(ins, u):
             print("iteration", iteration)
             iteration += 1
