@@ -20,8 +20,10 @@ class ProblemReader(object):
             exit(1)
 
         max_min = 1 if pre_c.iloc[0][-1] == 'max' else -1
-        c = np.multiply(pd.DataFrame.to_numpy(pre_c.drop(pre_c.columns[[-1, -2]], axis=1), dtype=np.float64),
-                        max_min).flatten()
+        c = np.multiply(
+            pd.DataFrame.to_numpy(pre_c.drop(pre_c.columns[[-1, -2]], axis=1), dtype=np.float64),
+            max_min
+        ).flatten()
 
         pre_u = data[data['b'].str.match('u')]
         if pre_u.shape[0] != 1:
