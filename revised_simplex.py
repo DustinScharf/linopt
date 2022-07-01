@@ -32,8 +32,15 @@ class RevisedSimplex(object):
                 return False
         return True
 
+    # todo impl.
+    def __phase_1(self, xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps: bool = False):
+
+        pass
+
     def __iteration(self, xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps: bool = False) -> ProblemSolution:
         # todo expand for boundaries
+
+        self.__phase_1(xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps)  # todo impl.
 
         iteration = 0
         ins = np.full_like(xi_n, 1)

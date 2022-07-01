@@ -1,6 +1,6 @@
 x,x,type,b
 7,12,z,max
-/,/,bound,u
+inf,inf,bound,u
 0,0,bound,l
 1,6,<=,73
 4,2,<=,76
