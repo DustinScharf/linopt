@@ -34,7 +34,7 @@ class RevisedSimplex(object):
 
     # todo impl.
     def __phase_1(self, xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps: bool = False):
-
+        print("phase1")
         pass
 
     def __iteration(self, xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps: bool = False) -> ProblemSolution:
