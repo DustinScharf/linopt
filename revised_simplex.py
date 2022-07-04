@@ -34,17 +34,13 @@ class RevisedSimplex(object):
         return True
 
     def __phase_1(self, xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps: bool = False):
-        print(np.argmax(x_b))
         # todo maybe need to safe parameters for later use
 
         xi_n = np.append(xi_n, len(c))
-        # x_n = np.append(x_n, 0)
 
         A = np.insert(A, len(c), -1, axis=1)
 
         c = np.append(np.zeros_like(c), -1)
-
-        # xi_b[out_idx], xi_n[in_idx] = xi_n[in_idx], xi_b[out_idx]
 
         out_idx = np.argmin(x_b)
         in_idx = len(xi_n) - 1
@@ -54,9 +50,66 @@ class RevisedSimplex(object):
         x_b += x_in_val
         x_b[out_idx] = x_in_val
 
-        # todo add A_b, c_b, An, Cn, ...
+        iteration = 0
+        ins = np.full_like(xi_n, 1)
+        while np.max(ins) > 0:
+            print("phase1 iteration", iteration)
+            iteration += 1
 
-        pass
+            A_b = A[:, xi_b]
+            A_n = A[:, xi_n]
+
+            c_b = c[xi_b]
+            c_n = c[xi_n]
+
+            y = np.linalg.solve(np.matrix.transpose(A_b), c_b)
+
+            ins = np.subtract(c_n, np.dot(y, A_n))
+
+            if print_steps:
+                print("Ins:", ins)
+            if np.max(ins) <= 0:
+                x_solution = np.array([xi_b, x_b])
+                solution = ProblemSolution(np.dot(c_b, x_b), x_solution)
+                if print_steps:
+                    print("> DONE")
+                    print()
+                    print(solution)
+                return solution
+            in_idx = np.argmax(ins)
+            if print_steps:
+                print("> In x", xi_n[in_idx])
+            a = A_n[:, in_idx]
+
+            d = np.linalg.solve(A_b, a)
+
+            outs = np.multiply(x_b, 1 / d)
+
+            valid_out_idx = np.where(outs > 0)[0]
+            if len(valid_out_idx) == 0:
+                x_solution = np.array([xi_b, x_b])
+                solution = ProblemSolution("UNBOUNDED", x_solution)
+                if print_steps:
+                    print("> DONE")
+                    print()
+                    print(solution)
+                return solution
+            out_idx = valid_out_idx[outs[valid_out_idx].argmin()]
+            if print_steps:
+                print("Outs:", outs)
+            t = outs[out_idx]
+            if print_steps:
+                print("> Out x", xi_b[out_idx])
+
+            xi_b[out_idx], xi_n[in_idx] = xi_n[in_idx], xi_b[out_idx]
+
+            x_b = np.subtract(x_b, np.multiply(t, d))
+            x_b[out_idx] = t
+
+            if print_steps:
+                print()
+
+            pass
 
     def __iteration(self, xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps: bool = False) -> ProblemSolution:
         # todo remove boundaries
@@ -66,7 +119,7 @@ class RevisedSimplex(object):
         iteration = 0
         ins = np.full_like(xi_n, 1)
         while np.max(ins) > 0:
-            print("iteration", iteration)
+            print("phase2 iteration", iteration)
             iteration += 1
 
             A_b = A[:, xi_b]

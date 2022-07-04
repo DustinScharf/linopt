@@ -19,6 +19,6 @@ if __name__ == '__main__':
     # problem = problem_reader.read_problem("test1000.csv")  # 400755.57 (iteration 7881, 2130.92 seconds ~ 35min)
 
     problem_solver = ProblemSolver()
-    print(problem_solver.solve(problem, Methods.revised_simplex))
+    print(problem_solver.solve(problem, Methods.revised_simplex, print_steps=True))
 
     print(f"\nFinished in {time.time() - start_time} seconds")
