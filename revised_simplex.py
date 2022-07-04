@@ -109,8 +109,6 @@ class RevisedSimplex(object):
             if print_steps:
                 print()
 
-            pass
-
     def __iteration(self, xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps: bool = False) -> ProblemSolution:
         # todo remove boundaries
 
