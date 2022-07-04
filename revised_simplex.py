@@ -26,25 +26,46 @@ class RevisedSimplex(object):
 
         return self.__iteration(xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps)
 
+    # todo remove
     def __all_at_upper_bound(self, ins, u) -> bool:
         for in_var, upper_bound in zip(ins, u):
             if not np.isclose(in_var, upper_bound):
                 return False
         return True
 
-    # todo impl.
     def __phase_1(self, xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps: bool = False):
-        print("phase1")
+        print(np.argmax(x_b))
+        # todo maybe need to safe parameters for later use
+
+        xi_n = np.append(xi_n, len(c))
+        # x_n = np.append(x_n, 0)
+
+        A = np.insert(A, len(c), -1, axis=1)
+
+        c = np.append(np.zeros_like(c), -1)
+
+        # xi_b[out_idx], xi_n[in_idx] = xi_n[in_idx], xi_b[out_idx]
+
+        out_idx = np.argmin(x_b)
+        in_idx = len(xi_n) - 1
+        xi_b[out_idx], xi_n[in_idx] = xi_n[in_idx], xi_b[out_idx]
+
+        x_in_val = -x_b[out_idx]
+        x_b += x_in_val
+        x_b[out_idx] = x_in_val
+
+        # todo add A_b, c_b, An, Cn, ...
+
         pass
 
     def __iteration(self, xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps: bool = False) -> ProblemSolution:
-        # todo expand for boundaries
+        # todo remove boundaries
 
         self.__phase_1(xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps)  # todo impl.
 
         iteration = 0
         ins = np.full_like(xi_n, 1)
-        while np.max(ins) > 0 and not self.__all_at_upper_bound(ins, u):
+        while np.max(ins) > 0:
             print("iteration", iteration)
             iteration += 1
 
