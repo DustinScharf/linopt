@@ -10,8 +10,8 @@ if __name__ == '__main__':
 
     # problem = problem_reader.read_problem("btu_ss2022_opt1_ue5_a1.csv")  # 2440
     # problem = problem_reader.read_problem("btu_ss2022_opt1_ue4_a2.csv")  # 58
-    # problem = problem_reader.read_problem("btu_ss2022_opt1_ue2_a2.csv")  # 211
-    problem = problem_reader.read_problem("btu_ss2022_opt1_ha6_a1.csv")  # TODO ?
+    problem = problem_reader.read_problem("btu_ss2022_opt1_ue2_a2.csv")  # 211
+    # problem = problem_reader.read_problem("btu_ss2022_opt1_ha6_a1.csv")  # TODO ?
     # problem = problem_reader.read_problem("btu_ss2022_opt1_ue3_a1.csv")  # TODO ?
     # problem = problem_reader.read_problem("test100.csv")  # 39259.79 (iteration 112, 1.03 seconds)
     # problem = problem_reader.read_problem("test250.csv")  # 101252.89 (iteration 365, 27.91 seconds)

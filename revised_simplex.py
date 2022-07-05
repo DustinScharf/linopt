@@ -114,6 +114,8 @@ class RevisedSimplex(object):
     def __iteration(self, xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps: bool = False) -> ProblemSolution:
         # todo remove boundaries
 
+        # todo add 0 allowed check before starting phase 1
+
         A_restore, c_restore = A.copy(), c.copy()
 
         status_, data_ = self.__phase_1(xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps)  # todo impl.
