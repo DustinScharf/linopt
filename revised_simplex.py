@@ -69,13 +69,15 @@ class RevisedSimplex(object):
             if print_steps:
                 print("Ins:", ins)
             if np.max(ins) <= 0:
-                x_solution = np.array([xi_b, x_b])
-                solution = ProblemSolution(np.dot(c_b, x_b), x_solution)
-                if print_steps:
-                    print("> DONE")
-                    print()
-                    print(solution)
-                return solution
+                ###
+                if np.max(xi_n) > np.max(xi_b):
+                    del_idx = np.argmax(xi_n)
+                    xi_n = np.delete(xi_n, del_idx)
+                else:
+                    del_idx = np.argmax(xi_b)
+                    xi_b = np.delete(xi_b, del_idx)
+                    x_b = np.delete(x_b, del_idx)
+                return "SOLVED", (xi_b, xi_n, x_b)
             in_idx = np.argmax(ins)
             if print_steps:
                 print("> In x", xi_n[in_idx])
@@ -93,7 +95,7 @@ class RevisedSimplex(object):
                     print("> DONE")
                     print()
                     print(solution)
-                return solution
+                return "UNBOUNDED", solution
             out_idx = valid_out_idx[outs[valid_out_idx].argmin()]
             if print_steps:
                 print("Outs:", outs)
@@ -112,7 +114,15 @@ class RevisedSimplex(object):
     def __iteration(self, xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps: bool = False) -> ProblemSolution:
         # todo remove boundaries
 
-        self.__phase_1(xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps)  # todo impl.
+        A_restore, c_restore = A.copy(), c.copy()
+
+        status_, data_ = self.__phase_1(xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps)  # todo impl.
+        if status_ == "UNBOUNDED":
+            return data_
+        elif status_ == "SOLVED":
+            xi_b, xi_n, x_b = data_
+
+        A, c = A_restore, c_restore
 
         iteration = 0
         ins = np.full_like(xi_n, 1)
