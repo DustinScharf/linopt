@@ -34,8 +34,6 @@ class RevisedSimplex(object):
         return True
 
     def __phase_1(self, xi_b, xi_n, x_b, x_n, l, u, A, c, print_steps: bool = False):
-        # todo maybe need to safe parameters for later use
-
         xi_n = np.append(xi_n, len(c))
 
         A = np.insert(A, len(c), -1, axis=1)
