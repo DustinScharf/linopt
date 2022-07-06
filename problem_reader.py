@@ -37,12 +37,11 @@ class ProblemReader(object):
             exit(1)
         l = pd.DataFrame.to_numpy(pre_l.drop(pre_l.columns[[-1, -2]], axis=1), dtype=np.float64).flatten()
 
-        A_le_pre = data[data['type'].str.match('<=')]
-        A_le = pd.DataFrame.to_numpy(A_le_pre.drop(A_le_pre.columns[[-1, -2]], axis=1), dtype=np.float64)
+        le_pre = data[data['type'].str.match('<=')]
+        A_le = pd.DataFrame.to_numpy(le_pre.drop(le_pre.columns[[-1, -2]], axis=1), dtype=np.float64)
+        b_le = pd.Series.to_numpy(le_pre['b'], dtype=np.float64).flatten()
 
-        # todo add = and convert to <= for more easy peasy
+        e_pre = data[data['type'].str.match('=')]
+        # todo convert to <= for more easy peasy
 
-        b_le_pre = data[data['type'].str.match('<=')]
-        b_le = pd.Series.to_numpy(b_le_pre['b'], dtype=np.float64).flatten()
-
-        return Problem(c, u, l, A_le, b_le)
+        return Problem(c, A_le, b_le)
