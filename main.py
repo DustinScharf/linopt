@@ -21,4 +21,4 @@ if __name__ == '__main__':
     # problem_solver.solve(problem, Methods.revised_simplex, print_steps=True)
     print(problem_solver.solve(problem, Methods.revised_simplex, print_steps=False))
 
-    print(f"\nFinished in {time.time() - start_time} seconds")
+    print(f"\nFinished in {round(time.time() - start_time, 3)} seconds")

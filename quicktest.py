@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 
 import problem_reader
@@ -8,6 +10,8 @@ if __name__ == '__main__':
     problem_solver = ProblemSolver()
 
     print("===== TEST START =====")
+
+    start_time = time.time()
 
     # UE
     # 1
@@ -25,4 +29,4 @@ if __name__ == '__main__':
     print(problem_solver.solve(problem_reader.read_problem("btu_ss2022_opt1_ha6_a1.csv")).z == "UNBOUNDED")
     print(np.isclose(problem_solver.solve(problem_reader.read_problem("btu_ss2022_opt1_ha6_a2.csv")).z, 30))
 
-    print("===== TEST END =====")
+    print(f"===== TEST END IN {round(time.time() - start_time, 3)} SECONDS =====")
