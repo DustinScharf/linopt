@@ -1,4 +1,6 @@
 import numpy as np
+import scipy.linalg
+from scipy.sparse.linalg import splu
 
 from problem import Problem
 from problem_solution import ProblemSolution
@@ -19,7 +21,7 @@ class RevisedSimplex(object):
         c_n = problem.c
         c = np.concatenate((c_n, c_b))
 
-        return self.__iteration(xi_b, xi_n, x_b, A, c, print_steps)
+        return self.__iteration(xi_b, xi_n, x_b, A, c, [], print_steps)
 
     def __phase_1(self, xi_b, xi_n, x_b, A, c, print_steps: bool = False):
         xi_n = np.append(xi_n, len(c))
@@ -76,12 +78,12 @@ class RevisedSimplex(object):
             valid_out_idx = np.where(outs > 0)[0]
             if len(valid_out_idx) == 0:
                 x_solution = np.array([xi_b, x_b])
-                solution = ProblemSolution("UNBOUNDED", x_solution)
+                solution = ProblemSolution("NO SOLUTION", x_solution)
                 if print_steps:
                     print("> DONE")
                     print()
                     print(solution)
-                return "UNBOUNDED", solution
+                return "UNSOLVED", solution
             out_idx = valid_out_idx[outs[valid_out_idx].argmin()]
             if print_steps:
                 print("Outs:", outs)
@@ -97,12 +99,12 @@ class RevisedSimplex(object):
             if print_steps:
                 print()
 
-    def __iteration(self, xi_b, xi_n, x_b, A, c, print_steps: bool = False) -> ProblemSolution:
+    def __iteration(self, xi_b, xi_n, x_b, A, c, b_factors, print_steps: bool = False) -> ProblemSolution:
         if np.min(x_b) < 0:
             A_restore, c_restore = A.copy(), c.copy()
 
             status_, data_ = self.__phase_1(xi_b, xi_n, x_b, A, c, print_steps)  # todo impl.
-            if status_ == "UNBOUNDED":
+            if status_ == "UNSOLVED":
                 return data_
             elif status_ == "SOLVED":
                 xi_b, xi_n, x_b = data_
@@ -122,8 +124,25 @@ class RevisedSimplex(object):
             c_b = c[xi_b]
             c_n = c[xi_n]
 
-            # solve (y * A_b = c_b) for y
+            if len(b_factors) > 999999:
+                # TODO
+                pass
+            elif len(b_factors) == 0:
+                # b_factors.extend(scipy.linalg.lu(A_b)[1:])
+                slu = splu(A_b, permc_spec="NATURAL", diag_pivot_thresh=0, options={"SymmetricMode": True})
+                b_factors.append(slu.L.toarray())
+                b_factors.append(slu.U.toarray())
+
+            # BTran
+            last_solve = np.linalg.solve(np.matrix.transpose(b_factors[-1]), c_b)
+            for b_factor in reversed(b_factors[:-1]):
+                last_solve = np.linalg.solve(np.matrix.transpose(b_factor), last_solve)
+
+            # solve (y * A_b = c_b) for y directly
             y = np.linalg.solve(np.matrix.transpose(A_b), c_b)
+
+            assert (np.isclose(y, last_solve)).all
+            y = last_solve
 
             # c_n - y * A_n
             ins = np.subtract(c_n, np.dot(y, A_n))
@@ -142,7 +161,16 @@ class RevisedSimplex(object):
                 print("> In x", xi_n[in_idx])
             a = A_n[:, in_idx]
 
+            # FTran
+            last_solve = np.linalg.solve(b_factors[0], a)
+            for b_factor in b_factors[1:]:
+                last_solve = np.linalg.solve(b_factor, last_solve)
+
+            # solve A_b*d = a for d directly
             d = np.linalg.solve(A_b, a)
+
+            assert (np.isclose(d, last_solve)).all
+            d = last_solve
 
             outs = np.multiply(x_b, 1 / d)
 
@@ -166,6 +194,12 @@ class RevisedSimplex(object):
 
             x_b = np.subtract(x_b, np.multiply(t, d))
             x_b[out_idx] = t
+
+            ###
+            new_b_factor = np.eye(len(A_b))
+            new_b_factor[:, out_idx] = d
+            b_factors.append(new_b_factor)
+            ###
 
             if print_steps:
                 print()
