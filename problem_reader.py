@@ -26,16 +26,22 @@ class ProblemReader(object):
         ).flatten()
 
         pre_u = data[data['b'].str.match('u')]
-        if pre_u.shape[0] != 1:
-            print("No upper bounds or more then 1 upper bounds per variable in CSV, exit...")
+        if pre_u.shape[0] > 1:
+            print("More then 1 upper bounds per variable in CSV, exit...")
             exit(1)
-        u = pd.DataFrame.to_numpy(pre_u.drop(pre_u.columns[[-1, -2]], axis=1), dtype=np.float64).flatten()
+        elif pre_u.shape[0] == 0:
+            u = np.full(len(data.index), np.inf, dtype=np.float64)
+        else:
+            u = pd.DataFrame.to_numpy(pre_u.drop(pre_u.columns[[-1, -2]], axis=1), dtype=np.float64).flatten()
 
         pre_l = data[data['b'].str.match('l')]
-        if pre_l.shape[0] != 1:
+        if pre_l.shape[0] > 1:
             print("No lower bounds or more then 1 lower bounds per variable in CSV, exit...")
             exit(1)
-        l = pd.DataFrame.to_numpy(pre_l.drop(pre_l.columns[[-1, -2]], axis=1), dtype=np.float64).flatten()
+        elif pre_l.shape[0] == 0:
+            l = np.zeros(len(data.index), dtype=np.float64)
+        else:
+            l = pd.DataFrame.to_numpy(pre_l.drop(pre_l.columns[[-1, -2]], axis=1), dtype=np.float64).flatten()
 
         le_pre = data[data['type'].str.match('<=')]
         A_le = pd.DataFrame.to_numpy(le_pre.drop(le_pre.columns[[-1, -2]], axis=1), dtype=np.float64)
