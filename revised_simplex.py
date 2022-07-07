@@ -6,7 +6,7 @@ from problem_solution import ProblemSolution
 
 
 class RevisedSimplex(object):
-    def solve(self, problem: Problem, print_steps: bool = False) -> ProblemSolution:
+    def solve(self, problem: Problem, print_steps: bool = False, print_iteration: bool = False) -> ProblemSolution:
         xi_b = np.arange(problem.A.shape[1], problem.A.shape[1] + problem.b.size)
         xi_n = np.arange(0, problem.A.shape[1])
 
@@ -22,9 +22,9 @@ class RevisedSimplex(object):
 
         b_factors = []
 
-        return self.__iteration(xi_b, xi_n, x_b, A, c, b_factors, print_steps)
+        return self.__iteration(xi_b, xi_n, x_b, A, c, b_factors, print_steps, print_iteration)
 
-    def __phase_1(self, xi_b, xi_n, x_b, A, c, b_factors, print_steps: bool = False):
+    def __phase_1(self, xi_b, xi_n, x_b, A, c, b_factors, print_steps, print_iteration):
         xi_n = np.append(xi_n, len(c))
 
         A = np.insert(A, len(c), -1, axis=1)
@@ -42,7 +42,7 @@ class RevisedSimplex(object):
         iteration = 0
         ins = np.full_like(xi_n, 1)
         while np.max(ins) > 0:
-            if print_steps:
+            if print_iteration:
                 print("phase1 iteration", iteration)
             iteration += 1
 
@@ -138,11 +138,11 @@ class RevisedSimplex(object):
             if print_steps:
                 print()
 
-    def __iteration(self, xi_b, xi_n, x_b, A, c, b_factors, print_steps: bool = False) -> ProblemSolution:
+    def __iteration(self, xi_b, xi_n, x_b, A, c, b_factors, print_steps, print_iteration) -> ProblemSolution:
         if np.min(x_b) < 0:
             A_restore, c_restore = A.copy(), c.copy()
 
-            status_, data_ = self.__phase_1(xi_b, xi_n, x_b, A, c, b_factors, print_steps)
+            status_, data_ = self.__phase_1(xi_b, xi_n, x_b, A, c, b_factors, print_steps, print_iteration)
             if status_ == "UNSOLVED":
                 return data_
             elif status_ == "SOLVED":
@@ -153,7 +153,7 @@ class RevisedSimplex(object):
         iteration = 0
         ins = np.full_like(xi_n, 1)
         while np.max(ins) > 0:
-            if print_steps:
+            if print_iteration:
                 print("phase2 iteration", iteration)
             iteration += 1
 
