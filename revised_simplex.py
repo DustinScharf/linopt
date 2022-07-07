@@ -124,14 +124,19 @@ class RevisedSimplex(object):
             c_b = c[xi_b]
             c_n = c[xi_n]
 
-            if len(b_factors) > 999999:
-                # TODO
-                pass
+            if len(b_factors) > 3:
+                current_value = np.matmul(b_factors[0], b_factors[1])
+                for b_factor in b_factors[2:]:
+                    current_value = np.matmul(current_value, b_factor)
+                A_LU = splu(current_value, permc_spec="NATURAL", diag_pivot_thresh=0, options={"SymmetricMode": True})
+                b_factors.clear()
+                b_factors.append(A_LU.L.toarray())
+                b_factors.append(A_LU.U.toarray())
             elif len(b_factors) == 0:
                 # b_factors.extend(scipy.linalg.lu(A_b)[1:])
-                slu = splu(A_b, permc_spec="NATURAL", diag_pivot_thresh=0, options={"SymmetricMode": True})
-                b_factors.append(slu.L.toarray())
-                b_factors.append(slu.U.toarray())
+                A_LU = splu(A_b, permc_spec="NATURAL", diag_pivot_thresh=0, options={"SymmetricMode": True})
+                b_factors.append(A_LU.L.toarray())
+                b_factors.append(A_LU.U.toarray())
 
             # BTran
             last_solve = np.linalg.solve(np.matrix.transpose(b_factors[-1]), c_b)
