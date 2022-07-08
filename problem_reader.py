@@ -47,7 +47,18 @@ class ProblemReader(object):
         A_le = pd.DataFrame.to_numpy(le_pre.drop(le_pre.columns[[-1, -2]], axis=1), dtype=np.float64)
         b_le = pd.Series.to_numpy(le_pre['b'], dtype=np.float64).flatten()
 
-        e_pre = data[data['type'].str.match('=')]
-        # todo convert to <= for more easy peasy
+        ge_pre = data[data['type'].str.match('>=')]
+        A_ge = pd.DataFrame.to_numpy(ge_pre.drop(ge_pre.columns[[-1, -2]], axis=1), dtype=np.float64)
+        b_ge = pd.Series.to_numpy(ge_pre['b'], dtype=np.float64).flatten()
+
+        A_le = np.row_stack((A_le, A_ge * -1))
+        b_le = np.append(b_le, b_ge * -1)
+
+        e_pre = data[data['type'].str.match('=')]  # todo add ==
+        A_e = pd.DataFrame.to_numpy(e_pre.drop(e_pre.columns[[-1, -2]], axis=1), dtype=np.float64)
+        b_e = pd.Series.to_numpy(e_pre['b'], dtype=np.float64).flatten()
+
+        A_le = np.row_stack((A_le, A_e, A_e * -1)) # todo causes Ab to be not squared
+        b_le = np.append(b_le, np.append(b_e, b_e * -1))
 
         return Problem(c, A_le, b_le)
