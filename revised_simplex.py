@@ -108,18 +108,17 @@ class RevisedSimplex(object):
 
             outs = np.multiply(x_b, 1 / d)
 
-            valid_out_idx = np.where(outs > 0)[0]
+            valid_out_idx = np.where((outs > 0) & (np.isfinite(outs)))[0]
+            if print_steps:
+                print("Outs:", outs)
             if len(valid_out_idx) == 0:
                 x_solution = np.array([xi_b, x_b])
                 solution = ProblemSolution("NO SOLUTION", x_solution)
                 if print_steps:
-                    print("> DONE")
                     print()
                     print(solution)
                 return "UNSOLVED", solution
             out_idx = valid_out_idx[outs[valid_out_idx].argmin()]
-            if print_steps:
-                print("Outs:", outs)
             t = outs[out_idx]
             if print_steps:
                 print("> Out x", xi_b[out_idx])
@@ -149,6 +148,7 @@ class RevisedSimplex(object):
                 xi_b, xi_n, x_b = data_
 
             A, c = A_restore, c_restore
+            b_factors.clear()
 
         iteration = 0
         ins = np.full_like(xi_n, 1)
@@ -183,9 +183,9 @@ class RevisedSimplex(object):
                 last_solve = np.linalg.solve(np.matrix.transpose(b_factor), last_solve)
 
             # solve (y * A_b = c_b) for y directly
-            y = np.linalg.solve(np.matrix.transpose(A_b), c_b)
-
-            assert (np.isclose(y, last_solve)).all
+            # y = np.linalg.solve(np.matrix.transpose(A_b), c_b)
+            #
+            # assert (np.isclose(y, last_solve)).all
             y = last_solve
 
             # c_n - y * A_n
@@ -218,18 +218,19 @@ class RevisedSimplex(object):
 
             outs = np.multiply(x_b, 1 / d)
 
-            valid_out_idx = np.where(outs > 0)[0]
+            valid_out_idx = np.where((outs > 0) & (np.isfinite(outs)))[0]
+            if print_steps:
+                print("Outs:", outs)
             if len(valid_out_idx) == 0:
                 x_solution = np.array([xi_b, x_b])
                 solution = ProblemSolution("UNBOUNDED", x_solution)
                 if print_steps:
+                    print("Outs: [/]")
                     print("> DONE")
                     print()
                     print(solution)
                 return solution
             out_idx = valid_out_idx[outs[valid_out_idx].argmin()]
-            if print_steps:
-                print("Outs:", outs)
             t = outs[out_idx]
             if print_steps:
                 print("> Out x", xi_b[out_idx])
