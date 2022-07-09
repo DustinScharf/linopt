@@ -105,21 +105,6 @@ class RevisedSimplex(object):
                         print()
                         print(solution)
                     return "UNSOLVED", solution
-                    # if np.isclose(np.sum(ins), -1):
-                    #     x_solution = np.array([xi_b, x_b], dtype=np.float64)
-                    #     solution = ProblemSolution(np.dot(np.append(c_restore, 0.0)[xi_b], x_b), x_solution)
-                    #     if print_steps:
-                    #         print("> DONE")
-                    #         print()
-                    #         print(solution.full_info())
-                    #     return "SOLVED_FINAL", solution
-                    # else:
-                    #     x_solution = np.array([xi_b, x_b], dtype=np.float64)
-                    #     solution = ProblemSolution("NO SOLUTION", x_solution)
-                    #     if print_steps:
-                    #         print()
-                    #         print(solution)
-                    #     return "UNSOLVED", solution
                 if print_steps:
                     print()
                 return "SOLVED", (xi_b, xi_n, x_b)
