@@ -67,4 +67,7 @@ Just add ``print`` to any command to print the current iteration and some infos 
 For example type ``python linopt.py my_problem.csv print``
 
 ## Class Diagramm
+If you are intrested in the code itself, the class diagramm gives an idea of the project structure.  
+The main part of the code can be found in ``revised_simplex.py``.  
+
 Soon...
