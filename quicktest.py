@@ -22,6 +22,7 @@ class QuickTester:
             ("btu_ss2022_opt1_ha6_a2.csv", 30),
 
             ("endris_sample_problem.csv", "UNBOUNDED"),  # Other
+            ("random_sample_problem.csv", 104),
         ]
 
         error_counter = 0
