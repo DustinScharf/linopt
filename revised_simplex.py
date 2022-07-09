@@ -27,11 +27,13 @@ class RevisedSimplex(object):
 
         b_factors = []
 
-        return self.__phase2(xi_b, xi_n, x_b, A, c, b_factors,
+        return self.__phase2(problem,
+                             xi_b, xi_n, x_b, A, c, b_factors,
                              eta_factorisation, eta_reset,
                              print_steps, print_iteration)
 
-    def __phase_1(self, xi_b, xi_n, x_b, A, c, b_factors,
+    def __phase_1(self, problem,
+                  xi_b, xi_n, x_b, A, c, b_factors,
                   eta_factorisation, eta_reset,
                   print_steps, print_iteration):
         xi_n = np.append(xi_n, len(c))
@@ -68,7 +70,8 @@ class RevisedSimplex(object):
                     current_value = np.matmul(b_factors[0], b_factors[1])
                     for b_factor in b_factors[2:]:
                         current_value = np.matmul(current_value, b_factor)
-                    A_LU = splu(current_value, permc_spec="NATURAL", diag_pivot_thresh=0, options={"SymmetricMode": True})
+                    A_LU = splu(current_value, permc_spec="NATURAL", diag_pivot_thresh=0,
+                                options={"SymmetricMode": True})
                     b_factors.clear()
                     b_factors.append(A_LU.L.toarray())
                     b_factors.append(A_LU.U.toarray())
@@ -96,21 +99,27 @@ class RevisedSimplex(object):
                     del_idx = np.argmax(xi_n)
                     xi_n = np.delete(xi_n, del_idx)
                 else:
-                    if np.isclose(np.sum(ins), -1):
-                        x_solution = np.array([xi_b, x_b], dtype=np.float64)
-                        solution = ProblemSolution(np.dot(np.append(c_restore, 0.0)[xi_b], x_b), x_solution)
-                        if print_steps:
-                            print("> DONE")
-                            print()
-                            print(solution.full_info())
-                        return "SOLVED_FINAL", solution
-                    else:
-                        x_solution = np.array([xi_b, x_b], dtype=np.float64)
-                        solution = ProblemSolution("NO SOLUTION", x_solution)
-                        if print_steps:
-                            print()
-                            print(solution)
-                        return "UNSOLVED", solution
+                    x_solution = np.array([xi_b, x_b], dtype=np.float64)
+                    solution = ProblemSolution("NO SOLUTION", x_solution)
+                    if print_steps:
+                        print()
+                        print(solution)
+                    return "UNSOLVED", solution
+                    # if np.isclose(np.sum(ins), -1):
+                    #     x_solution = np.array([xi_b, x_b], dtype=np.float64)
+                    #     solution = ProblemSolution(np.dot(np.append(c_restore, 0.0)[xi_b], x_b), x_solution)
+                    #     if print_steps:
+                    #         print("> DONE")
+                    #         print()
+                    #         print(solution.full_info())
+                    #     return "SOLVED_FINAL", solution
+                    # else:
+                    #     x_solution = np.array([xi_b, x_b], dtype=np.float64)
+                    #     solution = ProblemSolution("NO SOLUTION", x_solution)
+                    #     if print_steps:
+                    #         print()
+                    #         print(solution)
+                    #     return "UNSOLVED", solution
                 if print_steps:
                     print()
                 return "SOLVED", (xi_b, xi_n, x_b)
@@ -162,13 +171,15 @@ class RevisedSimplex(object):
             if print_steps:
                 print()
 
-    def __phase2(self, xi_b, xi_n, x_b, A, c, b_factors,
+    def __phase2(self, problem,
+                 xi_b, xi_n, x_b, A, c, b_factors,
                  eta_factorisation, eta_reset,
                  print_steps, print_iteration) -> ProblemSolution:
         if np.min(x_b) < 0:
             A_restore, c_restore = A.copy(), c.copy()
 
-            status_, data_ = self.__phase_1(xi_b, xi_n, x_b, A, c, b_factors,
+            status_, data_ = self.__phase_1(problem,
+                                            xi_b, xi_n, x_b, A, c, b_factors,
                                             eta_factorisation, eta_reset,
                                             print_steps, print_iteration)
             if status_ == "UNSOLVED":
@@ -199,7 +210,8 @@ class RevisedSimplex(object):
                     current_value = np.matmul(b_factors[0], b_factors[1])
                     for b_factor in b_factors[2:]:
                         current_value = np.matmul(current_value, b_factor)
-                    A_LU = splu(current_value, permc_spec="NATURAL", diag_pivot_thresh=0, options={"SymmetricMode": True})
+                    A_LU = splu(current_value, permc_spec="NATURAL", diag_pivot_thresh=0,
+                                options={"SymmetricMode": True})
                     b_factors.clear()
                     b_factors.append(A_LU.L.toarray())
                     b_factors.append(A_LU.U.toarray())

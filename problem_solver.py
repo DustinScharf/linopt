@@ -14,4 +14,5 @@ class ProblemSolver(object):
 
     def solve(self, problem: Problem, eta_factorisation: bool = True, eta_reset: int = 10,
               print_steps: bool = False, print_iteration: bool = False):
+        eta_reset = max(eta_reset, 1)
         return self.__revised_simplex.solve(problem, eta_factorisation, eta_reset, print_steps, print_iteration)

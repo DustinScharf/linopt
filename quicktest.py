@@ -13,7 +13,7 @@ class QuickTester:
 
         problems_solutions = [
             ("btu_ss2022_opt1_ue1_a1.csv", 32),  # UE 1
-            ("btu_ss2022_opt1_ue2_a2.csv", 211),  # UE 2
+            ("btu_ss2022_opt1_ue1_a2.csv", 211),
             ("btu_ss2022_opt1_ue3_a1.csv", 4),  # UE 3
             ("btu_ss2022_opt1_ue4_a2.csv", 58),  # UE 4
             ("btu_ss2022_opt1_ue5_a1.csv", 2440),  # UE 5
@@ -22,13 +22,13 @@ class QuickTester:
             ("btu_ss2022_opt1_ha6_a2.csv", 30),
 
             ("endris_sample_problem.csv", "UNBOUNDED"),  # Other
-            ("random_sample_problem.csv", 104),
         ]
 
         error_counter = 0
 
         for problem_solution in problems_solutions:
-            calc_solution = problem_solver.solve(problem_reader.read_problem(problem_solution[0])).z
+            problem = problem_reader.read_problem(problem_solution[0])
+            calc_solution = problem_solver.solve(problem, eta_factorisation=True, eta_reset=20).z
             true_solution = problem_solution[1]
             try:
                 test_success = np.isclose(calc_solution, true_solution)

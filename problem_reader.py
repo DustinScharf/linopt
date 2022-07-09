@@ -25,24 +25,6 @@ class ProblemReader(object):
             max_min
         ).flatten()
 
-        pre_u = data[data['b'].str.match('u')]
-        if pre_u.shape[0] > 1:
-            print("More then 1 upper bounds per variable in CSV, exit...")
-            exit(1)
-        elif pre_u.shape[0] == 0:
-            u = np.full(len(data.index), np.inf, dtype=np.float64)
-        else:
-            u = pd.DataFrame.to_numpy(pre_u.drop(pre_u.columns[[-1, -2]], axis=1), dtype=np.float64).flatten()
-
-        pre_l = data[data['b'].str.match('l')]
-        if pre_l.shape[0] > 1:
-            print("No lower bounds or more then 1 lower bounds per variable in CSV, exit...")
-            exit(1)
-        elif pre_l.shape[0] == 0:
-            l = np.zeros(len(data.index), dtype=np.float64)
-        else:
-            l = pd.DataFrame.to_numpy(pre_l.drop(pre_l.columns[[-1, -2]], axis=1), dtype=np.float64).flatten()
-
         le_pre = data[data['type'].str.match('<=')]
         A_le = pd.DataFrame.to_numpy(le_pre.drop(le_pre.columns[[-1, -2]], axis=1), dtype=np.float64)
         b_le = pd.Series.to_numpy(le_pre['b'], dtype=np.float64).flatten()
@@ -58,7 +40,33 @@ class ProblemReader(object):
         A_e = pd.DataFrame.to_numpy(e_pre.drop(e_pre.columns[[-1, -2]], axis=1), dtype=np.float64)
         b_e = pd.Series.to_numpy(e_pre['b'], dtype=np.float64).flatten()
 
-        A_le = np.row_stack((A_le, A_e, A_e * -1)) # todo causes Ab to be not squared
+        A_le = np.row_stack((A_le, A_e, A_e * -1))
         b_le = np.append(b_le, np.append(b_e, b_e * -1))
+
+        pre_u = data[data['b'].str.match('u')]
+        if pre_u.shape[0] > 1:
+            print("More then 1 upper bounds per variable in CSV, exit...")
+            exit(1)
+        elif pre_u.shape[0] == 1:
+            u = pd.DataFrame.to_numpy(pre_u.drop(pre_u.columns[[-1, -2]], axis=1), dtype=np.float64).flatten()
+            for u_i, i in zip(u, range(len(u))):
+                if np.isfinite(u_i):
+                    next_A_le = np.zeros(len(data.columns) - 2)
+                    next_A_le[i] = 1
+                    A_le = np.row_stack((A_le, next_A_le))
+                    b_le = np.append(b_le, u_i)
+
+        pre_l = data[data['b'].str.match('l')]
+        if pre_l.shape[0] > 1:
+            print("More then 1 lower bounds per variable in CSV, exit...")
+            exit(1)
+        elif pre_l.shape[0] == 1:
+            l = pd.DataFrame.to_numpy(pre_l.drop(pre_l.columns[[-1, -2]], axis=1), dtype=np.float64).flatten()
+            for l_i, i in zip(l, range(len(l))):
+                if np.isfinite(l_i) and l_i > 0:
+                    next_A_le = np.zeros(len(data.columns) - 2)
+                    next_A_le[i] = -1
+                    A_le = np.row_stack((A_le, next_A_le))
+                    b_le = np.append(b_le, -l_i)
 
         return Problem(c, A_le, b_le)
