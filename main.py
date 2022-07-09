@@ -11,8 +11,8 @@ if __name__ == '__main__':
     problem_reader = ProblemReader()
     problem_solver = ProblemSolver()
 
-    # problem = problem_reader.read_problem("btu_ss2022_opt1_ue1_a1.csv")  # 32
-    problem = problem_reader.read_problem("btu_ss2022_opt1_ue1_a2.csv")  # 211
+    problem = problem_reader.read_problem("btu_ss2022_opt1_ue1_a1.csv")  # 32
+    # problem = problem_reader.read_problem("btu_ss2022_opt1_ue1_a2.csv")  # 211
     # problem = problem_reader.read_problem("btu_ss2022_opt1_ue3_a1.csv")  # 4
     # problem = problem_reader.read_problem("btu_ss2022_opt1_ue4_a2.csv")  # 58
     # problem = problem_reader.read_problem("btu_ss2022_opt1_ue5_a1.csv")  # 2440

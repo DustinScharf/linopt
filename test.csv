@@ -1,0 +1,7 @@
+x,x,type,b
+1,3,z,max
+inf,inf,bound,u
+0,0,bound,l
+6,5,<=,90
+4.5,7.5,<=,90
+0,1,<=,9

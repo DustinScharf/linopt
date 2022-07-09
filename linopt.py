@@ -19,6 +19,10 @@ def get_args_or_exit():
 
     args = sys.argv[1:]
 
+    if args[0] == "v" or args[0] == "version":
+        print("1.0")
+        exit(0)
+
     if len(args) == 0 or (len(args) != 1) and (".csv" not in args[0] or (args[1] != "print" or len(args) != 2)):
         print_error_and_exit()
 
