@@ -12,7 +12,7 @@ def get_args_or_exit():
         print("===================================\n")
 
         print("Use\n\t>>> python linopt.py YOUR_CSV_FILE.csv\n\t(Default, solve problem from csv file)\n"
-              "or\n\t>>> python linopt.py test\n\t(Test all problem from the exercises)\n")
+              "or\n\t>>> python linopt.py test\n\t(Test all problems from the exercises)\n")
         print("Or use\n\t"
               ">>> python linopt.py YOUR_CSV_FILE.csv print\n\t(Solve problem from csv file and print steps)\n")
         exit(1)
