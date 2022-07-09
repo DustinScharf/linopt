@@ -1,8 +1,12 @@
+import warnings
+
 import numpy as np
 from scipy.sparse.linalg import splu
 
 from problem import Problem
 from problem_solution import ProblemSolution
+
+warnings.filterwarnings('ignore', message='splu requires CSC matrix format')
 
 
 class RevisedSimplex(object):
@@ -89,6 +93,8 @@ class RevisedSimplex(object):
                     del_idx = np.argmax(xi_b)
                     xi_b = np.delete(xi_b, del_idx)
                     x_b = np.delete(x_b, del_idx)
+                if print_steps:
+                    print()
                 return "SOLVED", (xi_b, xi_n, x_b)
             in_idx = np.argmax(ins)
             if print_steps:
@@ -106,7 +112,8 @@ class RevisedSimplex(object):
             assert (np.isclose(d, last_solve)).all
             d = last_solve
 
-            outs = np.multiply(x_b, 1 / d)
+            with np.errstate(divide='ignore'):
+                outs = np.divide(x_b, d)
 
             valid_out_idx = np.where((outs > 0) & (np.isfinite(outs)))[0]
             if print_steps:
@@ -172,7 +179,6 @@ class RevisedSimplex(object):
                 b_factors.append(A_LU.L.toarray())
                 b_factors.append(A_LU.U.toarray())
             elif len(b_factors) == 0:
-                # b_factors.extend(scipy.linalg.lu(A_b)[1:])
                 A_LU = splu(A_b, permc_spec="NATURAL", diag_pivot_thresh=0, options={"SymmetricMode": True})
                 b_factors.append(A_LU.L.toarray())
                 b_factors.append(A_LU.U.toarray())
@@ -183,9 +189,9 @@ class RevisedSimplex(object):
                 last_solve = np.linalg.solve(np.matrix.transpose(b_factor), last_solve)
 
             # solve (y * A_b = c_b) for y directly
-            # y = np.linalg.solve(np.matrix.transpose(A_b), c_b)
-            #
-            # assert (np.isclose(y, last_solve)).all
+            y = np.linalg.solve(np.matrix.transpose(A_b), c_b)
+
+            assert (np.isclose(y, last_solve)).all
             y = last_solve
 
             # c_n - y * A_n
@@ -198,7 +204,7 @@ class RevisedSimplex(object):
                 if print_steps:
                     print("> DONE")
                     print()
-                    print(solution)
+                    print(solution.full_info())
                 return solution
             in_idx = np.argmax(ins)
             if print_steps:
@@ -216,7 +222,8 @@ class RevisedSimplex(object):
             assert (np.isclose(d, last_solve)).all
             d = last_solve
 
-            outs = np.multiply(x_b, 1 / d)
+            with np.errstate(divide='ignore'):
+                outs = np.divide(x_b, d)
 
             valid_out_idx = np.where((outs > 0) & (np.isfinite(outs)))[0]
             if print_steps:
@@ -225,7 +232,6 @@ class RevisedSimplex(object):
                 x_solution = np.array([xi_b, x_b])
                 solution = ProblemSolution("UNBOUNDED", x_solution)
                 if print_steps:
-                    print("Outs: [/]")
                     print("> DONE")
                     print()
                     print(solution)

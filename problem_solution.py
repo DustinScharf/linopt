@@ -1,10 +1,15 @@
+from typing import Union
+
 import numpy as np
 
 
 class ProblemSolution(object):
-    def __init__(self, z: float, x: np.ndarray):
+    def __init__(self, z: Union[float, str], x: np.ndarray):
         self.z: float = z
         self.x: np.ndarray = x
 
-    def __str__(self):
+    def __str__(self) -> str:
+        return f"{self.z}"
+
+    def full_info(self) -> str:
         return f"Solution:\n{self.x}\n\n=> OPTIMUM={self.z}"
