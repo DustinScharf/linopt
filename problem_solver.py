@@ -12,9 +12,6 @@ class ProblemSolver(object):
     def __init__(self):
         self.__revised_simplex = RevisedSimplex()
 
-    def solve(self, problem: Problem, method: Methods = Methods.revised_simplex,
+    def solve(self, problem: Problem, eta_factorisation: bool = True, eta_reset: int = 10,
               print_steps: bool = False, print_iteration: bool = False):
-        if method == Methods.revised_simplex:
-            return self.__revised_simplex.solve(problem, print_steps, print_iteration)
-        else:
-            raise NotImplementedError("The passed method is not supported, use Methods.revised_simplex")
+        return self.__revised_simplex.solve(problem, eta_factorisation, eta_reset, print_steps, print_iteration)

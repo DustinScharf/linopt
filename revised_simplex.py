@@ -10,7 +10,8 @@ warnings.filterwarnings('ignore', message='splu requires CSC matrix format')
 
 
 class RevisedSimplex(object):
-    def solve(self, problem: Problem, print_steps: bool = False, print_iteration: bool = False) -> ProblemSolution:
+    def solve(self, problem: Problem, eta_factorisation: bool = True, eta_reset: int = 10,
+              print_steps: bool = False, print_iteration: bool = False) -> ProblemSolution:
         xi_b = np.arange(problem.A.shape[1], problem.A.shape[1] + problem.b.size)
         xi_n = np.arange(0, problem.A.shape[1])
 
@@ -26,9 +27,13 @@ class RevisedSimplex(object):
 
         b_factors = []
 
-        return self.__iteration(xi_b, xi_n, x_b, A, c, b_factors, print_steps, print_iteration)
+        return self.__phase2(xi_b, xi_n, x_b, A, c, b_factors,
+                             eta_factorisation, eta_reset,
+                             print_steps, print_iteration)
 
-    def __phase_1(self, xi_b, xi_n, x_b, A, c, b_factors, print_steps, print_iteration):
+    def __phase_1(self, xi_b, xi_n, x_b, A, c, b_factors,
+                  eta_factorisation, eta_reset,
+                  print_steps, print_iteration):
         xi_n = np.append(xi_n, len(c))
 
         A = np.insert(A, len(c), -1, axis=1)
@@ -112,6 +117,7 @@ class RevisedSimplex(object):
             assert (np.isclose(d, last_solve)).all
             d = last_solve
 
+            # divide by 0 would give inf, what we can accept here
             with np.errstate(divide='ignore'):
                 outs = np.divide(x_b, d)
 
@@ -144,11 +150,15 @@ class RevisedSimplex(object):
             if print_steps:
                 print()
 
-    def __iteration(self, xi_b, xi_n, x_b, A, c, b_factors, print_steps, print_iteration) -> ProblemSolution:
+    def __phase2(self, xi_b, xi_n, x_b, A, c, b_factors,
+                 eta_factorisation, eta_reset,
+                 print_steps, print_iteration) -> ProblemSolution:
         if np.min(x_b) < 0:
             A_restore, c_restore = A.copy(), c.copy()
 
-            status_, data_ = self.__phase_1(xi_b, xi_n, x_b, A, c, b_factors, print_steps, print_iteration)
+            status_, data_ = self.__phase_1(xi_b, xi_n, x_b, A, c, b_factors,
+                                            eta_factorisation, eta_reset,
+                                            print_steps, print_iteration)
             if status_ == "UNSOLVED":
                 return data_
             elif status_ == "SOLVED":
@@ -222,6 +232,7 @@ class RevisedSimplex(object):
             assert (np.isclose(d, last_solve)).all
             d = last_solve
 
+            # divide by 0 would give inf, what we can accept here
             with np.errstate(divide='ignore'):
                 outs = np.divide(x_b, d)
 
@@ -246,11 +257,9 @@ class RevisedSimplex(object):
             x_b = np.subtract(x_b, np.multiply(t, d))
             x_b[out_idx] = t
 
-            ###
             new_b_factor = np.eye(len(A_b))
             new_b_factor[:, out_idx] = d
             b_factors.append(new_b_factor)
-            ###
 
             if print_steps:
                 print()
