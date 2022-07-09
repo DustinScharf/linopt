@@ -1,9 +1,7 @@
 # linopt
 Solver for linear problems  
 
-![Mathematical expression of a linear problem](problem_eq.svg "Linear Problem")  
-
-using revised simplex.
+![Mathematical expression of a linear problem](problem_eq.svg "Linear Problem")
 
 <hr>
 
