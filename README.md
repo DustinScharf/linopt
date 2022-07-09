@@ -8,20 +8,22 @@ Solver for linear problems
 2. Input Problems
 3. Solve Problems
 
-## Installation
+## 1. Installation
+_If you are familar with python, just clone this repo into your IDE / Editor and skip to 2._
+
 First you need [Python (3.9)](https://www.python.org/downloads/release/python-3913/ "Download Python 3.9")
 and [Pip](https://www.python.org/downloads/release/python-3913/ "Download Pip") (should come with Python).
 
 1. Download [linopt](TODO "Download linopt")
 2. Extract linopt to a folder / directory of your choice
-3. Open a terminal / cmd inside the folder / directory linopt was exacted to
+3. Open a terminal / cmd inside the folder / directory linopt was extracted to
 4. Type ``pip install -r requirements.txt``
    1. If this fails, you need to install the packages listed in ``requirements.txt`` manually
 5. Type ``python linopt.py version`` to test if the installation was successfull
 
 Now you can run the program with a terminal / cmd from the current linopt folder / directory like shown below.
 
-## Input Problems
+## 2. Input Problems
 Problems are saved in CSV files like shown below
 ```csv
 x       ,   ... ,   x       ,   type    ,   b
@@ -55,7 +57,7 @@ x,x,type,b
 0,-1,>=,-9
 ```
 
-## Solve Problems
+## 3. Solve Problems
 The get a first view type ``python linopt.py test.csv print`` in the terminal and press enter.
 
 Type ``python linopt.py my_problem.csv`` to solve a problem directly.  
@@ -66,7 +68,7 @@ Type ``python linopt.py my_problem.csv eta 20`` to additionally set basis factor
 Just add ``print`` to any command to print the current iteration and some infos about the current calculation.   
 For example type ``python linopt.py my_problem.csv print``
 
-## Class Diagramm
+## *Class Diagramm
 If you are intrested in the code itself, the class diagramm gives an idea of the project structure.  
 The main part of the code can be found in ``revised_simplex.py``.  
 
