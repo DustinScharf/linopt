@@ -14,7 +14,7 @@ and [Pip](https://www.python.org/downloads/release/python-3913/ "Download Pip") 
 
 1. Download [linopt](TODO "Download linopt")
 2. Extract linopt to a folder / directory of your choice
-3. Open a terminal / cmd inside linopt was exacted to
+3. Open a terminal / cmd inside the folder / directory linopt was exacted to
 4. Type ``pip install -r requirements.txt``
    1. If this fails, you need to install the packages listed in ``requirements.txt`` manually
 5. Type ``python linopt.py version`` to test if the installation was successfull
