@@ -9,7 +9,7 @@ Solver for linear problems
 3. Solve Problems
 
 ## 1. Installation
-_If you are familar with python, just clone this repo into your IDE / Editor and skip to 2._
+_If you are familiar with python, just clone this repo into your IDE / Editor and skip to 2._
 
 First you need [Python (3.9)](https://www.python.org/downloads/release/python-3913/ "Download Python 3.9")
 and [Pip](https://www.python.org/downloads/release/python-3913/ "Download Pip") (should come with Python).
@@ -19,7 +19,7 @@ and [Pip](https://www.python.org/downloads/release/python-3913/ "Download Pip") 
 3. Open a terminal / cmd inside the folder / directory linopt was extracted to
 4. Type ``pip install -r requirements.txt``
    1. If this fails, you need to install the packages listed in ``requirements.txt`` manually
-5. Type ``python linopt.py version`` to test if the installation was successfull
+5. Type ``python linopt.py version`` to test if the installation was successfully
 
 Now you can run the program with a terminal / cmd from the current linopt folder / directory like shown below.
 
@@ -49,7 +49,7 @@ Just create a file like ``my_problem.csv`` and enter your own problem.
 Some other inputs can be handled too
 ```csv
 x,x,type,b
-1,3,z,max
+-1,-3,z,min
 20,25,bound,u
 0,0,bound,l
 -6,-5,>=,-90
@@ -58,7 +58,7 @@ x,x,type,b
 ```
 
 ## 3. Solve Problems
-The get a first view type ``python linopt.py test.csv print`` in the terminal and press enter.
+To get a first view type ``python linopt.py test.csv print`` in the terminal and press enter.
 
 Type ``python linopt.py my_problem.csv`` to solve a problem directly.  
 Type ``python linopt.py`` to get a tour with some additional settings.  
@@ -69,7 +69,7 @@ Just add ``print`` to any command to print the current iteration and some infos 
 For example type ``python linopt.py my_problem.csv print``
 
 ## *Class Diagramm
-If you are intrested in the code itself, the class diagramm gives an idea of the project structure.  
+If you are interested in the code itself, the class diagramm gives an idea of the project structure.  
 The main part of the code can be found in ``revised_simplex.py``.  
 
 Soon...
