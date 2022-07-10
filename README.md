@@ -42,7 +42,8 @@ x,x,type,b
 0,1,<=,9
 ```
 
-Just create a file like ``my_problem.csv`` and enter your own problem.
+Just create a file like ``my_problem.csv`` and enter your own problem.  
+Then save it in the same folder / directory where all other linopt files are.
 
 <hr>
 
