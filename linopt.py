@@ -1,79 +1,87 @@
+import os
 import sys
 import time
 
 from problem_reader import ProblemReader
 from problem_solver import ProblemSolver
-from quicktest import QuickTester
 
 
-def get_args_or_exit():
-    def print_error_and_exit():
-        print("\nlinopt was started with wrong input")
-        print("===================================\n")
-
-        print("Use\n\t>>> python linopt.py YOUR_CSV_FILE.csv\n\t(Default, solve problem from csv file)\n"
-              "or\n\t>>> python linopt.py test\n\t(Test all problems from the exercises)\n")
-        print("Or use\n\t"
-              ">>> python linopt.py YOUR_CSV_FILE.csv print\n\t(Solve problem from csv file and print steps)\n")
+def cli():
+    print("Enter a problem (csv file) you want to solve (include .csv)...")
+    problem = input()
+    if problem[-4:] != ".csv" or not os.path.isfile(problem):
+        print("Invalid input, enter a existing csv file including .csv, exit...")
         exit(1)
+    print()
 
-    args = sys.argv[1:]
-
-    if len(args) == 0 or (len(args) != 1) and (".csv" not in args[0] or (args[1] != "print" or len(args) != 2)):
-        print_error_and_exit()
-
-    if args[0] == "v" or args[0] == "version":
-        print("1.0")
-        exit(0)
-
-    if ".csv" in args[0]:
-        if len(args) == 2:
-            return "SOLVE_AND_PRINT", args[0]
-        else:
-            return "SOLVE", args[0]
-    elif args[0] == "test":
-        return "TEST", None
+    print("Print the steps? (y/n)")
+    print_steps = input()
+    if print_steps == 'y':
+        print_steps = True
+    elif print_steps == 'n':
+        print_steps = False
     else:
-        print_error_and_exit()
+        print("Invalid input, use only y or n, exit...")
+        exit(1)
+    print()
+
+    print("Use eta basis factorisation? (y/n)")
+    use_eta = input()
+    if use_eta == 'y':
+        use_eta = True
+    elif use_eta == 'n':
+        use_eta = False
+    else:
+        print("Invalid input, use only y or n, exit...")
+        exit(1)
+    print()
+
+    eta_steps = -1
+    if use_eta:
+        print("After how many iteration shall the basis factorisation reset?")
+        try:
+            eta_steps = int(input())
+        except ValueError:
+            print("Invalid input, enter a number, exit...")
+            exit(1)
+        print()
+
+    print(f'Starting to solve problem "{problem}"\n...\n')
+
+    start_time = time.time()
+
+    if print_steps:
+        problem_solver.solve(problem_reader.read_problem(problem),
+                             eta_factorisation=use_eta, eta_reset=eta_steps,
+                             print_steps=True, print_iteration=True)
+    else:
+        solution = problem_solver.solve(problem_reader.read_problem(problem),
+                                        eta_factorisation=use_eta, eta_reset=eta_steps)
+        print(f"=> Optimum={solution}")
+
+    print(f"\n=== Finished in around {round(time.time() - start_time, 3)} seconds ===\n")
+
+
+def cl():
+    # todo
+    pass
 
 
 if __name__ == '__main__':
-    type, problem = get_args_or_exit()
+    print("\nWelcome to linopt")
+    print("=================\n")
+
+    print("*use CTRL+C to quit\n")
+
+    args = sys.argv[1:]
+    if len(args) == 1 and (args[0] == "v" or args[0] == "version"):
+        print("1.0")
+        exit(0)
 
     problem_reader = ProblemReader()
     problem_solver = ProblemSolver()
 
-    print("\nWelcome to linopt")
-    print("=================\n")
-
-    if type == "SOLVE":
-        print(f'Starting to solve problem "{problem}"\n...\n')
-
-        start_time = time.time()
-
-        solution = problem_solver.solve(problem_reader.read_problem(problem))
-
-        print(solution.full_info())
-
-        print(f"\n=== Finished in around {round(time.time() - start_time, 3)} seconds ===\n")
-    elif type == "SOLVE_AND_PRINT":
-        print(f'Starting to solve problem "{problem}" and printing steps\n...\n')
-
-        start_time = time.time()
-
-        try:
-            problem_solver.solve(problem_reader.read_problem(problem), print_steps=True, print_iteration=True)
-        except FileNotFoundError:
-            print(f"File {problem} was not found...")
-
-        print(f"\n=== Finished in around {round(time.time() - start_time, 3)} seconds ===\n")
+    if len(args) == 0:
+        cli()
     else:
-        print(f'Starting to test all problems from the exercises\n...\n')
-
-        start_time = time.time()
-
-        quick_tester = QuickTester()
-        quick_tester.test_all()
-
-        print(f"\n=== Finished in around {round(time.time() - start_time, 3)} seconds ===\n")
-
+        cl()
