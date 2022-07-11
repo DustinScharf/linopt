@@ -50,7 +50,7 @@ Then save it in the same folder / directory where all other linopt files are.**
 
 <hr>
 
-Some other inputs can be handled too
+_Experimental: Some other inputs can be handled too_
 ```csv
 x,x,type,b
 -1,-3,z,min

@@ -127,6 +127,7 @@ class RevisedSimplex(object):
             # divide by 0 would give inf, what we can accept here
             with np.errstate(divide='ignore'):
                 outs = np.divide(x_b, d)
+                outs[np.isnan(outs)] = 0
 
             valid_out_idx = np.where((outs > 0) & (np.isfinite(outs)))[0]
             if print_steps:

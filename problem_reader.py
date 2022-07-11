@@ -8,7 +8,7 @@ class ProblemReader(object):
     def __init__(self, directory: str = "HERE"):
         if directory != "HERE":
             raise NotImplementedError("Custom directory location is not implemented yet, "
-                                      "use 'HERE' for same directory as this file") # todo
+                                      "use 'HERE' for same directory as this file")  # todo
         self.directory: str = directory
 
     def read_problem(self, csv_file_name: str) -> Problem:
@@ -36,12 +36,11 @@ class ProblemReader(object):
         A_le = np.row_stack((A_le, A_ge * -1))
         b_le = np.append(b_le, b_ge * -1)
 
-        e_pre = data[data['type'].str.match('=')]  # todo add ==
-        A_e = pd.DataFrame.to_numpy(e_pre.drop(e_pre.columns[[-1, -2]], axis=1), dtype=np.float64)
-        b_e = pd.Series.to_numpy(e_pre['b'], dtype=np.float64).flatten()
-
-        A_le = np.row_stack((A_le, A_e, A_e * -1))
-        b_le = np.append(b_le, np.append(b_e, b_e * -1))
+        e_pre = data[data['type'].str.match('=')]
+        if e_pre.shape[0] != 0:
+            print("Using = in the problem restrictions is not supported "
+                  "due to unexpected behavior because of float overflow possibility, exit...\n")
+            exit(1)
 
         pre_u = data[data['b'].str.match('u')]
         if pre_u.shape[0] > 1:
