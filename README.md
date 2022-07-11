@@ -42,8 +42,10 @@ x,x,type,b
 0,1,<=,9
 ```
 
-Just create a file like ``my_problem.csv`` and enter your own problem.  
-Then save it in the same folder / directory where all other linopt files are.
+Every line needs to contain the same number of elements and the header line is necessary.  
+
+**Just create a file like ``my_problem.csv`` and enter your own problem.  
+Then save it in the same folder / directory where all other linopt files are.**
 
 <hr>
 
