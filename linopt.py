@@ -76,7 +76,7 @@ def cl_out():
             if os.path.isfile(arg):
                 problem = arg
             else:
-                print(f"The csv file {arg} was not found, exit...\n")
+                print(f"The csv file >> {arg} << was not found, exit...\n")
                 exit(1)
         elif arg == "eta":
             use_eta = True
@@ -97,7 +97,7 @@ def cl_out():
         print("Missing necessary problem argument, exit...\n")
         exit(1)
 
-    print(f'Starting to solve problem "{problem}"\n...\n')
+    print(f"Starting to solve problem >> {problem} <<\n...\n")
 
     start_time = time.time()
 
