@@ -5,12 +5,6 @@ from problem import Problem
 
 
 class ProblemReader(object):
-    def __init__(self, directory: str = "HERE"):
-        if directory != "HERE":
-            raise NotImplementedError("Custom directory location is not implemented yet, "
-                                      "use 'HERE' for same directory as this file")  # todo
-        self.directory: str = directory
-
     def read_problem(self, csv_file_name: str) -> Problem:
         data = pd.read_csv(csv_file_name)
 

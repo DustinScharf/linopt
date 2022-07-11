@@ -28,20 +28,16 @@ class RevisedSimplex(object):
 
         b_factors = []
 
-        return self.__phase2(problem,
-                             xi_b, xi_n, x_b, A, c, b_factors,
+        return self.__phase2(xi_b, xi_n, x_b, A, c, b_factors,
                              eta_factorisation, eta_reset,
                              print_steps, print_iteration)
 
-    def __phase_1(self, problem,
-                  xi_b, xi_n, x_b, A, c, b_factors,
-                  eta_factorisation, eta_reset,
-                  print_steps, print_iteration):
+    def __phase1(self, xi_b, xi_n, x_b, A, c, b_factors,
+                 eta_factorisation, eta_reset,
+                 print_steps, print_iteration):
         xi_n = np.append(xi_n, len(c))
 
         A = np.insert(A, len(c), -1, axis=1)
-
-        c_restore = c.copy()
 
         c = np.append(np.zeros_like(c), -1)
 
@@ -158,17 +154,15 @@ class RevisedSimplex(object):
             if print_steps:
                 print()
 
-    def __phase2(self, problem,
-                 xi_b, xi_n, x_b, A, c, b_factors,
+    def __phase2(self, xi_b, xi_n, x_b, A, c, b_factors,
                  eta_factorisation, eta_reset,
                  print_steps, print_iteration) -> ProblemSolution:
         if np.min(x_b) < 0:
             A_restore, c_restore = A.copy(), c.copy()
 
-            status_, data_ = self.__phase_1(problem,
-                                            xi_b, xi_n, x_b, A, c, b_factors,
-                                            eta_factorisation, eta_reset,
-                                            print_steps, print_iteration)
+            status_, data_ = self.__phase1(xi_b, xi_n, x_b, A, c, b_factors,
+                                           eta_factorisation, eta_reset,
+                                           print_steps, print_iteration)
             if status_ == "UNSOLVED":
                 return data_
             elif status_ == "SOLVED":
