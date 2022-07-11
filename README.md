@@ -66,7 +66,7 @@ To get a first view type ``python linopt.py test.csv print`` in the terminal and
 Type ``python linopt.py my_problem.csv`` to solve a problem directly.  
 Type ``python linopt.py`` to get a tour with some additional settings.  
 Type ``python linopt.py my_problem.csv eta`` to use eta basis factorisation.  
-Type ``python linopt.py my_problem.csv eta 20`` to additionally set basis factorisation reset number manual.  
+Type ``python linopt.py my_problem.csv eta-20`` to additionally set basis factorisation reset number manual.  
 
 Just add ``print`` to any command to print the current iteration and some infos about the current calculation.   
 For example type ``python linopt.py my_problem.csv print``
