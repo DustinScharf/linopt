@@ -12,7 +12,7 @@ Solver for linear problems
 _If you are familiar with python, just clone this repo into your IDE / Editor and skip to 2._
 
 First you need [Python (3.9)](https://www.python.org/downloads/release/python-3913/ "Download Python 3.9")
-and [Pip](https://www.python.org/downloads/release/python-3913/ "Download Pip") (should come with Python).
+and [pip](https://pip.pypa.io/en/stable/installation/ "Download Pip") (should come with Python).
 
 1. Download [linopt](TODO "Download linopt")
 2. Extract linopt to a folder / directory of your choice
