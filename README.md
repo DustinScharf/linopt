@@ -12,13 +12,14 @@ Solver for linear problems
 _If you are familiar with python, just clone this repo into your IDE / Editor and skip to 2._
 
 First you need [Python (3.9)](https://www.python.org/downloads/release/python-3913/ "Download Python 3.9")
-and [pip](https://pip.pypa.io/en/stable/installation/ "Download Pip") (should come with Python).
+and [pip](https://pip.pypa.io/en/stable/installation/ "Download pip") (should come with Python).
 
 1. Download [linopt](TODO "Download linopt")
 2. Extract linopt to a folder / directory of your choice
 3. Open a terminal / cmd inside the folder / directory linopt was extracted to
 4. Type ``pip install -r requirements.txt``
    1. If this fails, you need to install the packages listed in ``requirements.txt`` manually
+   2. Most likely ``numpy``, ``scipy`` and ``pandas`` are enough
 5. Type ``python linopt.py version`` to test if the installation was successfully
 
 Now you can run the program with a terminal / cmd from the current linopt folder / directory like shown below.
