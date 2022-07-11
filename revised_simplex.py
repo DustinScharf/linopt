@@ -7,6 +7,7 @@ from problem import Problem
 from problem_solution import ProblemSolution
 
 warnings.filterwarnings('ignore', message='splu requires CSC matrix format')
+np.set_printoptions(suppress=True)
 
 
 class RevisedSimplex(object):
@@ -226,7 +227,7 @@ class RevisedSimplex(object):
                 if print_steps:
                     print("> DONE")
                     print()
-                    print(solution.full_info())
+                    solution.print_full_info()
                 return solution
             in_idx = np.argmax(ins)
             if print_steps:
