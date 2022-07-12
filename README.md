@@ -78,6 +78,6 @@ For example type ``python linopt.py my_problem.csv bland``
 
 ## *Class Diagramm
 If you are interested in the code itself, the class diagramm gives an idea of the project structure.  
-The main part of the code can be found in ``revised_simplex.py``.  
+The main part of the code can be found in revised simplex class in ``revised_simplex.py``.  
 
 ![This image shows a class diagramm of the linopt project](class_diag.png "linopt class diagramm")
