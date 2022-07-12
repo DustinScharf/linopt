@@ -11,7 +11,7 @@ np.set_printoptions(suppress=True)
 
 
 class RevisedSimplex(object):
-    def solve(self, problem: Problem, eta_factorisation: bool = True, eta_reset: int = 10,
+    def solve(self, problem: Problem, eta_factorisation: bool = True, eta_reset: int = 10, bland: bool = False,
               print_steps: bool = False, print_iteration: bool = False) -> ProblemSolution:
         xi_b = np.arange(problem.A.shape[1], problem.A.shape[1] + problem.b.size)
         xi_n = np.arange(0, problem.A.shape[1])
@@ -29,11 +29,11 @@ class RevisedSimplex(object):
         b_factors = []
 
         return self.__phase2(xi_b, xi_n, x_b, A, c, b_factors,
-                             eta_factorisation, eta_reset,
+                             eta_factorisation, eta_reset, bland,
                              print_steps, print_iteration)
 
     def __phase1(self, xi_b, xi_n, x_b, A, c, b_factors,
-                 eta_factorisation, eta_reset,
+                 eta_factorisation, eta_reset, bland,
                  print_steps, print_iteration):
         xi_n = np.append(xi_n, len(c))
 
@@ -105,7 +105,11 @@ class RevisedSimplex(object):
                 if print_steps:
                     print()
                 return "SOLVED", (xi_b, xi_n, x_b)
-            in_idx = np.argmax(ins)
+            if bland:
+                valid_in_idx = np.where((ins > 0) & (np.isfinite(ins)))[0]
+                in_idx = min(valid_in_idx)
+            else:
+                in_idx = np.argmax(ins)
             if print_steps:
                 print("> In x", xi_n[in_idx])
             a = A_n[:, in_idx]
@@ -126,9 +130,9 @@ class RevisedSimplex(object):
                 outs = np.divide(x_b, d)
                 outs[np.isnan(outs)] = 0
 
-            valid_out_idx = np.where((outs > 0) & (np.isfinite(outs)))[0]
             if print_steps:
                 print("Outs:", outs)
+            valid_out_idx = np.where((outs > 0) & (np.isfinite(outs)))[0]
             if len(valid_out_idx) == 0:
                 x_solution = np.array([xi_b, x_b], dtype=np.float64)
                 solution = ProblemSolution("/ (NO SOLUTION)", x_solution)
@@ -155,13 +159,13 @@ class RevisedSimplex(object):
                 print()
 
     def __phase2(self, xi_b, xi_n, x_b, A, c, b_factors,
-                 eta_factorisation, eta_reset,
+                 eta_factorisation, eta_reset, bland,
                  print_steps, print_iteration) -> ProblemSolution:
         if np.min(x_b) < 0:
             A_restore, c_restore = A.copy(), c.copy()
 
             status_, data_ = self.__phase1(xi_b, xi_n, x_b, A, c, b_factors,
-                                           eta_factorisation, eta_reset,
+                                           eta_factorisation, eta_reset, bland,
                                            print_steps, print_iteration)
             if status_ == "UNSOLVED":
                 return data_
@@ -225,7 +229,11 @@ class RevisedSimplex(object):
                     print()
                     solution.print_full_info()
                 return solution
-            in_idx = np.argmax(ins)
+            if bland:
+                valid_in_idx = np.where((ins > 0) & (np.isfinite(ins)))[0]
+                in_idx = min(valid_in_idx)
+            else:
+                in_idx = np.argmax(ins)
             if print_steps:
                 print("> In x", xi_n[in_idx])
             a = A_n[:, in_idx]

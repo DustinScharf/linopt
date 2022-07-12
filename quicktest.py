@@ -28,7 +28,7 @@ class QuickTester:
 
         for problem_solution in problems_solutions:
             problem = problem_reader.read_problem(problem_solution[0])
-            calc_solution = problem_solver.solve(problem, eta_factorisation=True, eta_reset=20).z
+            calc_solution = problem_solver.solve(problem, eta_factorisation=True, eta_reset=20, bland=True).z
             true_solution = problem_solution[1]
             try:
                 test_success = np.isclose(calc_solution, true_solution)
