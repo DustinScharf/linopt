@@ -70,7 +70,11 @@ Type ``python linopt.py my_problem.csv eta`` to use eta basis factorisation.
 Type ``python linopt.py my_problem.csv eta-20`` to additionally set basis factorisation reset number manual.  
 
 Just add ``print`` to any command to print the current iteration and some infos about the current calculation.   
-For example type ``python linopt.py my_problem.csv print``
+For example type ``python linopt.py my_problem.csv print``  
+
+If is seems like the algorithm does not terminate, add ``bland`` to the command.  
+This uses bland selection method to ensure termination, but may be slower.  
+For example type ``python linopt.py my_problem.csv bland``
 
 ## *Class Diagramm
 If you are interested in the code itself, the class diagramm gives an idea of the project structure.  

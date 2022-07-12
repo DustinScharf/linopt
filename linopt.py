@@ -38,7 +38,7 @@ def cli():
 
     eta_steps = -1
     if use_eta:
-        print("After how many iteration shall the basis factorisation reset?")
+        print("After how many iteration reset the basis factorisation?")
         try:
             eta_steps = int(input())
         except ValueError:
@@ -46,17 +46,28 @@ def cli():
             exit(1)
         print()
 
+    print("Use biggest coefficient rule (c) or bland rule (b) for in / out variable selection? (c/b)")
+    use_bland = input()
+    if use_bland == 'c':
+        use_bland = False
+    elif use_bland == 'b':
+        use_bland = True
+    else:
+        print("Invalid input, use only c or b, exit...\n")
+        exit(1)
+    print()
+
     print(f'Starting to solve problem "{problem}"\n...\n')
 
     start_time = time.time()
 
     if print_steps:
         problem_solver.solve(problem_reader.read_problem(problem),
-                             eta_factorisation=use_eta, eta_reset=eta_steps,
+                             eta_factorisation=use_eta, eta_reset=eta_steps, bland=use_bland,
                              print_steps=True, print_iteration=True)
     else:
         solution = problem_solver.solve(problem_reader.read_problem(problem),
-                                        eta_factorisation=use_eta, eta_reset=eta_steps)
+                                        eta_factorisation=use_eta, eta_reset=eta_steps, bland=use_bland)
         print(f"=> Optimum = {solution}")
 
     print(f"\n=== Finished in around {round(time.time() - start_time, 3)} seconds ===\n")
@@ -68,6 +79,7 @@ def cl_out():
     problem = None
     use_eta = False
     eta_steps = 20
+    bland = False
     print_steps = False
 
     for arg in args:
@@ -87,6 +99,8 @@ def cl_out():
             except ValueError:
                 print("Invalid input, enter a number, exit...\n")
                 exit(1)
+        elif arg == "bland":
+            bland = True
         elif arg == "print":
             print_steps = True
         else:
@@ -103,11 +117,11 @@ def cl_out():
 
     if print_steps:
         problem_solver.solve(problem_reader.read_problem(problem),
-                             eta_factorisation=use_eta, eta_reset=eta_steps,
+                             eta_factorisation=use_eta, eta_reset=eta_steps, bland=bland,
                              print_steps=True, print_iteration=True)
     else:
         solution = problem_solver.solve(problem_reader.read_problem(problem),
-                                        eta_factorisation=use_eta, eta_reset=eta_steps)
+                                        eta_factorisation=use_eta, eta_reset=eta_steps, bland=bland)
         print(f"=> Optimum = {solution}")
 
     print(f"\n=== Finished in around {round(time.time() - start_time, 3)} seconds ===\n")
