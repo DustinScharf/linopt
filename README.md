@@ -14,7 +14,7 @@ _If you are familiar with python, just clone this repo into your IDE / Editor an
 First you need [Python (3.9)](https://www.python.org/downloads/release/python-3913/ "Download Python 3.9")
 and [pip](https://pip.pypa.io/en/stable/installation/ "Download pip") (should come with Python).
 
-1. Download [linopt](https://github.com/DustinScharf/linopt/archive/refs/tags/release1.0.zip "Download linopt")
+1. Download [linopt](https://github.com/DustinScharf/linopt/archive/refs/tags/release1.1.zip "Download linopt")
 2. Extract linopt to a folder / directory of your choice
 3. Open a terminal / cmd inside the folder / directory linopt was extracted to
 4. Type ``pip install -r requirements.txt``

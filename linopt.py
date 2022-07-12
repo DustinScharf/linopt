@@ -135,7 +135,7 @@ if __name__ == '__main__':
 
     args = sys.argv[1:]
     if len(args) == 1 and (args[0] == "v" or args[0] == "version"):
-        print("Version: linopt 1.0\n")
+        print("Version: linopt 1.1\n")
         exit(0)
 
     problem_reader = ProblemReader()
