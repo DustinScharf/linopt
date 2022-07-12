@@ -19,7 +19,7 @@ and [pip](https://pip.pypa.io/en/stable/installation/ "Download pip") (should co
 3. Open a terminal / cmd inside the folder / directory linopt was extracted to
 4. Type ``pip install -r requirements.txt``
    1. If this fails, you need to install the packages listed in ``requirements.txt`` manually
-   2. Most likely ``numpy``, ``scipy`` and ``pandas`` are enough
+   2. Most likely ``pip install numpy``, ``pip install scipy`` and ``pip install pandas`` are enough
 5. Type ``python linopt.py version`` to test if the installation was successfully
 
 Now you can run the program with a terminal / cmd from the current linopt folder / directory like shown below.
