@@ -96,7 +96,6 @@ class RevisedSimplex(object):
                     del_idx = np.argmax(xi_n)
                     xi_n = np.delete(xi_n, del_idx)
                 else:
-                    x_solution = np.array([xi_b, x_b], dtype=np.float64)
                     solution = ProblemSolution("/ (NO SOLUTION)", None, None)
                     if print_steps:
                         print()
