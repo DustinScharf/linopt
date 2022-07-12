@@ -10,7 +10,7 @@ class ProblemReader(object):
 
         pre_c = data[data['type'].str.match('z')]
         if pre_c.shape[0] != 1:
-            print("No Z-function or more then 1 Z-function in CSV, exit...")
+            print("No Z-function or more then 1 Z-function in CSV, exit...\n")
             exit(1)
 
         max_min = 1 if pre_c.iloc[0][-1] == 'max' else -1
@@ -38,7 +38,7 @@ class ProblemReader(object):
 
         pre_u = data[data['b'].str.match('u')]
         if pre_u.shape[0] > 1:
-            print("More then 1 upper bounds per variable in CSV, exit...")
+            print("More then 1 upper bounds per variable in CSV, exit...\n")
             exit(1)
         elif pre_u.shape[0] == 1:
             u = pd.DataFrame.to_numpy(pre_u.drop(pre_u.columns[[-1, -2]], axis=1), dtype=np.float64).flatten()
@@ -51,7 +51,7 @@ class ProblemReader(object):
 
         pre_l = data[data['b'].str.match('l')]
         if pre_l.shape[0] > 1:
-            print("More then 1 lower bounds per variable in CSV, exit...")
+            print("More then 1 lower bounds per variable in CSV, exit...\n")
             exit(1)
         elif pre_l.shape[0] == 1:
             l = pd.DataFrame.to_numpy(pre_l.drop(pre_l.columns[[-1, -2]], axis=1), dtype=np.float64).flatten()
@@ -61,5 +61,9 @@ class ProblemReader(object):
                     next_A_le[i] = -1
                     A_le = np.row_stack((A_le, next_A_le))
                     b_le = np.append(b_le, -l_i)
+
+        if len(A_le) == 0:
+            print("No restrictions set in CSV (at least 1 is required), exit...\n")
+            exit(1)
 
         return Problem(c, A_le, b_le)
