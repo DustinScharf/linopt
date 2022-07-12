@@ -97,7 +97,7 @@ class RevisedSimplex(object):
                     xi_n = np.delete(xi_n, del_idx)
                 else:
                     x_solution = np.array([xi_b, x_b], dtype=np.float64)
-                    solution = ProblemSolution("/ (NO SOLUTION)", x_solution)
+                    solution = ProblemSolution("/ (NO SOLUTION)", None, None)
                     if print_steps:
                         print()
                         solution.print_full_info()
@@ -135,7 +135,7 @@ class RevisedSimplex(object):
             valid_out_idx = np.where((outs > 0) & (np.isfinite(outs)))[0]
             if len(valid_out_idx) == 0:
                 x_solution = np.array([xi_b, x_b], dtype=np.float64)
-                solution = ProblemSolution("/ (NO SOLUTION)", x_solution)
+                solution = ProblemSolution("/ (NO SOLUTION)", None, None)
                 if print_steps:
                     print()
                     solution.print_full_info()
@@ -220,10 +220,11 @@ class RevisedSimplex(object):
             if print_steps:
                 print("Ins:", ins)
             if np.max(ins) <= 0:
-                x_solution = np.array([xi_b, x_b], dtype=np.float64)
-                x_solution = np.column_stack((x_solution, np.row_stack((xi_n, np.zeros_like(xi_n)))))
-                x_solution = x_solution[:, x_solution[0].argsort()]
-                solution = ProblemSolution(np.dot(c_b, x_b), x_solution)
+                full_x_solution = np.array([xi_b, x_b], dtype=np.float64)
+                full_x_solution = np.column_stack((full_x_solution, np.row_stack((xi_n, np.zeros_like(xi_n)))))
+                full_x_solution = full_x_solution[:, full_x_solution[0].argsort()]
+                x_solution, slack = full_x_solution[:, :len(xi_n)], full_x_solution[:, len(xi_n):]
+                solution = ProblemSolution(np.dot(c_b, x_b), x_solution, slack)
                 if print_steps:
                     print("> DONE")
                     print()
@@ -258,7 +259,7 @@ class RevisedSimplex(object):
                 print("Outs:", outs)
             if len(valid_out_idx) == 0:
                 x_solution = np.array([xi_b, x_b], dtype=np.float64)
-                solution = ProblemSolution("UNBOUNDED", x_solution)
+                solution = ProblemSolution("UNBOUNDED", None, None)
                 if print_steps:
                     print("> DONE")
                     print()
