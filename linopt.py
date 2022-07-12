@@ -57,7 +57,7 @@ def cli():
     else:
         solution = problem_solver.solve(problem_reader.read_problem(problem),
                                         eta_factorisation=use_eta, eta_reset=eta_steps)
-        print(f"=> Optimum={solution}")
+        print(f"=> Optimum = {solution}")
 
     print(f"\n=== Finished in around {round(time.time() - start_time, 3)} seconds ===\n")
 
@@ -108,7 +108,7 @@ def cl_out():
     else:
         solution = problem_solver.solve(problem_reader.read_problem(problem),
                                         eta_factorisation=use_eta, eta_reset=eta_steps)
-        print(f"=> Optimum={solution}")
+        print(f"=> Optimum = {solution}")
 
     print(f"\n=== Finished in around {round(time.time() - start_time, 3)} seconds ===\n")
 

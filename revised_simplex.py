@@ -97,10 +97,10 @@ class RevisedSimplex(object):
                     xi_n = np.delete(xi_n, del_idx)
                 else:
                     x_solution = np.array([xi_b, x_b], dtype=np.float64)
-                    solution = ProblemSolution("NO SOLUTION", x_solution)
+                    solution = ProblemSolution("/ (NO SOLUTION)", x_solution)
                     if print_steps:
                         print()
-                        print(solution)
+                        solution.print_full_info()
                     return "UNSOLVED", solution
                 if print_steps:
                     print()
@@ -131,10 +131,10 @@ class RevisedSimplex(object):
                 print("Outs:", outs)
             if len(valid_out_idx) == 0:
                 x_solution = np.array([xi_b, x_b], dtype=np.float64)
-                solution = ProblemSolution("NO SOLUTION", x_solution)
+                solution = ProblemSolution("/ (NO SOLUTION)", x_solution)
                 if print_steps:
                     print()
-                    print(solution)
+                    solution.print_full_info()
                 return "UNSOLVED", solution
             out_idx = valid_out_idx[outs[valid_out_idx].argmin()]
             t = outs[out_idx]
@@ -217,6 +217,8 @@ class RevisedSimplex(object):
                 print("Ins:", ins)
             if np.max(ins) <= 0:
                 x_solution = np.array([xi_b, x_b], dtype=np.float64)
+                x_solution = np.column_stack((x_solution, np.row_stack((xi_n, np.zeros_like(xi_n)))))
+                x_solution = x_solution[:, x_solution[0].argsort()]
                 solution = ProblemSolution(np.dot(c_b, x_b), x_solution)
                 if print_steps:
                     print("> DONE")
@@ -252,7 +254,7 @@ class RevisedSimplex(object):
                 if print_steps:
                     print("> DONE")
                     print()
-                    print(solution)
+                    solution.print_full_info()
                 return solution
             out_idx = valid_out_idx[outs[valid_out_idx].argmin()]
             t = outs[out_idx]
